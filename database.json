@@ -1,0 +1,7 @@
+{
+  "host": "mysql.lightcode.dev",
+  "port": "3306",
+  "user": "lightcode",
+  "password": "fc251199",
+  "database": "lightcode"
+}
