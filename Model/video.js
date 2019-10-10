@@ -16,7 +16,7 @@ class Video {
 
     createNewVideo(){
         let vm = new videoMaker(this.req, this.res);
-        vm.create();
+        vm.create(vm);
         
     }
 }

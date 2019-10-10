@@ -63,7 +63,7 @@ async function robot(id) {
             throw new Error('Image already downloaded')
           }
 
-          await downloadAndSave(imageUrl, `${sentenceIndex}-original.png`)
+          await downloadAndSave(imageUrl, `${sentenceIndex}-original.png`, content.id)
           content.downloadedImages.push(imageUrl)
           console.log(`> [image-robot] [${sentenceIndex}][${imageIndex}] Image successfully downloaded: ${imageUrl}`)
           break
@@ -74,10 +74,10 @@ async function robot(id) {
     }
   }
 
-  async function downloadAndSave(url, fileName) {
+  async function downloadAndSave(url, fileName, dirName) {
     return imageDownloader.image({
       url: url,
-      dest: `./content/${fileName}`
+      dest: `./video-maker/contents/${dirName}/${fileName}`
     })
   }
 

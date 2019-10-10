@@ -29,6 +29,15 @@ app.post('/api/login', (req, res) => {
 app.post('/api/create-video', (req, res) => {
     let video = new Video(req, res);
     video.createNewVideo();
+    /*
+    {
+	"prefix": "About",
+	"searchTerm": "Dell",
+	"quantitySentences": "7",
+	"voice": "paid",
+	"language": "EN"
+    }
+    */
 });
 
 

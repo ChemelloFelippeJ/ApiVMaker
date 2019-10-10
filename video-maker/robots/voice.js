@@ -6,9 +6,9 @@ const audioconcat = require('audioconcat')
 
 const state = require('./state.js');
 
-async function robot() {
+async function robot(id) {
     //Authenticates GoogleTTS
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = "credentials/google-tts.json";
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = "./video-maker/credentials/google-tts.json";
 
     console.log('> [voice-robot] Starting...');
     const content = state.load(id);
@@ -44,16 +44,16 @@ async function robot() {
         if (text.length < sentenceLenght) {
             await freeGoogleTTS(text, sentenceIndex);
         } else {
-            await paidGoogleTTS(text, sentenceIndex);
+            // await paidGoogleTTS(text, sentenceIndex);
         }
 
     }
 
     let i = 0;
-    voices.push("./IntroAudioMute.mp3");
+    voices.push("./video-maker/contents/IntroAudioMute.mp3");
     do{
-        if(fs.existsSync(`./content/output[${i}].mp3`)){
-            voices.push(`./content/output[${i}].mp3`);
+        if(fs.existsSync(`./video-maker/contents/${id}/output[${i}].mp3`)){
+            voices.push(`./video-maker/contents/${id}/output[${i}].mp3`);
             console.log(`> [voice-robot] output[${i}].mp3 confirmed`);
             i++;
         }else{
@@ -67,7 +67,7 @@ async function robot() {
     async function voicesConcat() {
         return new Promise((resolve, reject) => {
             audioconcat(voices)
-                .concat('./content/output[final].mp3')
+                .concat(`./video-maker/contents/${id}/output[final].mp3`)
                 .on('start', function (command) {
                     console.log('> [voice-robot] Voices concat started, command: ', command)
                 })
@@ -76,7 +76,7 @@ async function robot() {
                     console.error('ffmpeg stderr:', stderr)
                 })
                 .on('end', function (output) {
-                    console.error('> [voice-robot] Audio created in: /content/output[final].mp3', output)
+                    console.log(`> [voice-robot] Audio created in: ./video-maker/contents/${id}/output[final].mp3`, output)
                     resolve();
                 })
         });
@@ -92,7 +92,7 @@ async function robot() {
 
         let options = {
             directory: ".",
-            filename: "./content/output[" + sentenceIndex + "].mp3"
+            filename: "./video-maker/contents/${id}/output[" + sentenceIndex + "].mp3"
         };
 
         await googleTTS(text, languageFree, 1).then(async function (url) {
@@ -128,7 +128,7 @@ async function robot() {
                 console.log(`> [voice-robot] Sentence ${sentenceIndex} synthesize complete`);
             }
 
-            await fs.writeFile(`./content/output[${sentenceIndex}].mp3`, response.audioContent, 'binary', err => {
+            await fs.writeFile(`./video-maker/contents/${id}/output[${sentenceIndex}].mp3`, response.audioContent, 'binary', err => {
                 if (err) {
                     console.log(`> [voice-robot] Sentence ${sentenceIndex} error - ${err}`)
                 } else{

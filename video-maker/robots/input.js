@@ -7,7 +7,7 @@ var db = mysql.createConnection({
     "database": "lightcode"
 })
 
-async function robot(res, language, voice, searchTerm, prefix, qttSentences, time) {
+async function robot(res, language, voice, searchTerm, prefix, qttSentences, time, objVMaker) {
 
     let content = {};
 
@@ -43,7 +43,7 @@ async function robot(res, language, voice, searchTerm, prefix, qttSentences, tim
             res.send(err);
         }).on('result', (result) => {
             content.id = result.insertId;
-              
+            objVMaker.id = content.id;  
             state.save(content, content.id);
         })
 }

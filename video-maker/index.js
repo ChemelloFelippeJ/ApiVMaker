@@ -10,9 +10,6 @@ const robots = {
 };
 const fs = require("fs");
 
-// await robots.trends();
-// await robots.text();
-// await robots.image();
 // await robots.voice();
 // await robots.video();
 // await robots.youtube()
@@ -27,13 +24,14 @@ class VMaker {
         this.prefix = req.body.prefix;
     }
 
-    async create() {
+    async create(obj) {
         this.time = new Date();
-        await robots.input(this.res, this.language, this.voice, this.searchTerm, this.prefix, this.qtdSentences, this.time);
-        setTimeout(() => {
-            this.id = this.getLastDirName();
-            this.res.send("ID:" + this.id);
-        }, 1000);
+        // await robots.input(this.res, this.language, this.voice, this.searchTerm, this.prefix, this.qtdSentences, this.time, obj);
+        // await this.sleep(500);
+        // await robots.text(this.id);
+        // await robots.image(this.id);
+        this.id = 76;
+        await robots.voice(this.id);
     }
 
     getLastDirName() {

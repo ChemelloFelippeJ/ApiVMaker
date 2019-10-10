@@ -7,9 +7,9 @@ function setPath(id) {
 
   if(!fs.existsSync(dirpath)){
     fs.mkdirSync(dirpath);
-    console.log(`> [start-robot] Directory ${id} created`);
+    console.log(`> [state-robot] Directory ${id} created`);
   }else{
-    console.log(`> [start-robot] Directory ${id} already exists`);
+    console.log(`> [state-robot] Directory ${id} already exists`);
   }
 }
 

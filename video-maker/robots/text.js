@@ -14,7 +14,7 @@ const nlu = new NaturalLanguageUnderstandingV1({
 
 const state = require('./state.js');
 
-async function robot() {
+async function robot(id) {
     console.log('> [text-robot] Starting...');
     const content = state.load(id);
 
@@ -114,6 +114,7 @@ async function robot() {
                 }
             }, (error, response) => {
                 if (error) {
+                    console.log(error);
                     reject(error);
                     return
                 }
