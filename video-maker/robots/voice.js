@@ -11,7 +11,7 @@ async function robot() {
     process.env.GOOGLE_APPLICATION_CREDENTIALS = "credentials/google-tts.json";
 
     console.log('> [voice-robot] Starting...');
-    const content = state.load();
+    const content = state.load(id);
 
     let voices = [];
     let sentenceLenght;

@@ -1,6 +1,8 @@
 const express = require("express");
 const md5 = require("md5");
+
 const Cliente = require("./Model/cliente");
+const Video = require("./Model/video");
 
 const app = express();
 app.use(express.json());
@@ -23,5 +25,11 @@ app.post('/api/login', (req, res) => {
         req.body.password
     );
 });
+
+app.post('/api/create-video', (req, res) => {
+    let video = new Video(req, res);
+    video.createNewVideo();
+});
+
 
 app.listen(3001);

@@ -7,7 +7,7 @@ const fs = require('fs');
 
 async function robot() {
     console.log('> [youtube-robot] Starting...');
-    const content = state.load();
+    const content = state.load(id);
 
     const videoFilePath = 'video.mp4';
     const videoFileSize = fs.statSync(videoFilePath).size;

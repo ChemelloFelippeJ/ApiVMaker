@@ -16,7 +16,7 @@ async function robot() {
 
     console.log("> [video-robot] Starting...");
 
-    const content = state.load();
+    const content = state.load(id);
 
     let images = [];
     var tempo;
@@ -29,7 +29,7 @@ async function robot() {
     await createImageIntro(content);
     await renderVideo("node", content);
 
-    state.save(content);
+    state.save(content, id);
 
     async function convertAllImages(content) {
         for (

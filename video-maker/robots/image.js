@@ -6,14 +6,14 @@ const fs = require('fs')
 
 const googleSearchCredentials = require('../credentials/google-search.json')
 
-async function robot() {
+async function robot(id) {
   console.log('> [image-robot] Starting...')
-  const content = state.load()
+  const content = state.load(id)
 
   await fetchImagesOfAllSentences(content)
   await downloadAllImages(content)
 
-  state.save(content)
+  state.save(content, id);
 
   async function fetchImagesOfAllSentences(content) {
     for (let sentenceIndex = 0; sentenceIndex < content.maximumSentences; sentenceIndex++) {

@@ -16,7 +16,7 @@ const state = require('./state.js');
 
 async function robot() {
     console.log('> [text-robot] Starting...');
-    const content = state.load();
+    const content = state.load(id);
 
     let languageOfSearch = await verifyLanguage(content);
     await fetchContentFromWikipedia(content);
@@ -26,9 +26,8 @@ async function robot() {
     await fetchKeywordsOfAllSentences(content);
     await checkNumberOfSentences(content);
     await createFullText(content);
-    await askRemoveSentence(content);
 
-    state.save(content);
+    state.save(content, id);
 
     async function verifyLanguage(content) {
         if (content.language === "PT") {

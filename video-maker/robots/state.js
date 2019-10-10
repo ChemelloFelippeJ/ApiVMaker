@@ -1,19 +1,26 @@
 const fs = require('fs')
-const contentFilePath = './content.json'
-const scriptFilePath = './content/after-effects-script.js'
 
-function save(content) {
+let contentFilePath;
+function setPath(id) {
+  dirpath = `./video-maker/contents/${id}/`;
+  contentFilePath = dirpath + `content-a.json`;
+
+  if(!fs.existsSync(dirpath)){
+    fs.mkdirSync(dirpath);
+    console.log(`> [start-robot] Directory ${id} created`);
+  }else{
+    console.log(`> [start-robot] Directory ${id} already exists`);
+  }
+}
+
+function save(content, id) {
+  setPath(id);
   const contentString = JSON.stringify(content)
   return fs.writeFileSync(contentFilePath, contentString)
 }
 
-function saveScript(content) {
-  const contentString = JSON.stringify(content)
-  const scriptString = `var content = ${contentString}`
-  return fs.writeFileSync(scriptFilePath, scriptString)
-}
-
-function load() {
+function load(id) {
+  setPath(id);
   const fileBuffer = fs.readFileSync(contentFilePath, 'utf-8')
   const contentJson = JSON.parse(fileBuffer)
   return contentJson
@@ -21,6 +28,5 @@ function load() {
 
 module.exports = {
   save,
-  saveScript,
   load
 }

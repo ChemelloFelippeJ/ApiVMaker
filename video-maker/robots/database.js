@@ -24,7 +24,7 @@ function createTable() {
 }
 
 function saveBaseData() {
-    content = state.load();
+    content = state.load(id);
     const sql = `INSERT INTO content(prefix, searchTerm, maximumSentences, voice, videoDestination, language) VALUES ('${content.prefix}', '${content.searchTerm}', '${content.maximumSentences}', '${content.voice}', '${content.videoDestination}', '${content.language}')`;
     console.log("> [database-robot] Saving Data");
     console.log(sql);
