@@ -12,7 +12,7 @@ let ffmpeg = require("fluent-ffmpeg");
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
-async function robot() {
+async function robot(id) {
 
     console.log("> [video-robot] Starting...");
 
@@ -43,8 +43,8 @@ async function robot() {
 
     async function convertImage(sentenceIndex) {
         return new Promise((resolve, reject) => {
-            const inputFile = `./content/${sentenceIndex}-original.png[0]`;
-            const outputFile = `./content/${sentenceIndex}-converted.png`;
+            const inputFile = `./video-maker/contents/${id}/${sentenceIndex}-original.png[0]`;
+            const outputFile = `./video-maker/contents/${id}/${sentenceIndex}-converted.png`;
             const width = 1920;
             const height = 1080;
 
@@ -93,9 +93,9 @@ async function robot() {
 
     async function insertSentenceInImage(sentenceIndex) {
         return new Promise((resolve, reject) => {
-            const inputFile = `./content/${sentenceIndex}-converted.png`;
-            const inputTextFile = `./content/${sentenceIndex}-sentence.png`;
-            const outputFile = `./content/${sentenceIndex}-finished.png`;
+            const inputFile = `./video-maker/contents/${id}/${sentenceIndex}-converted.png`;
+            const inputTextFile = `./video-maker/contents/${id}/${sentenceIndex}-sentence.png`;
+            const outputFile = `./video-maker/contents/${id}/${sentenceIndex}-finished.png`;
             const width = 1280;
             const height = 720;
 
@@ -129,7 +129,7 @@ async function robot() {
 
     async function createSentenceImage(sentenceIndex, sentenceText) {
         return new Promise((resolve, reject) => {
-            const outputFile = `./content/${sentenceIndex}-sentence.png`;
+            const outputFile = `./video-maker/contents/${id}/${sentenceIndex}-sentence.png`;
             const size = "5120x720";
             const gravity = "west";
 
@@ -156,9 +156,9 @@ async function robot() {
     async function createImageIntro(content) {
         console.log("> [video-robot] Creating video intro");
 
-        let outputFileSentence = "./content/introSentence.png";
-        let outputFileImage = "./content/introImage.png";
-        let outputImageIntro = "./content/video-intro.png";
+        let outputFileSentence = `./video-maker/contents/${id}/introSentence.png`;
+        let outputFileImage = `./video-maker/contents/${id}/introImage.png`;
+        let outputImageIntro = `./video-maker/contents/${id}/video-intro.png`;
 
         await createSentenceIntro(content, outputFileSentence, outputFileImage);
         await convertImageIntro(outputFileImage);
@@ -195,7 +195,7 @@ async function robot() {
 
     async function convertImageIntro(outputFileImage) {
         return new Promise((resolve, reject) => {
-            gm("./content/0-converted.png")
+            gm(`./video-maker/contents/${id}/0-converted.png`)
                 .blur(7, 5)
                 .write(outputFileImage, error => {
                     if (error) {
@@ -234,8 +234,8 @@ async function robot() {
     async function createYouTubeThumbnail() {
         return new Promise((resolve, reject) => {
             gm()
-                .in("./content/0-converted.png")
-                .write("./content/youtube-thumbnail.jpg", error => {
+                .in(`./video-maker/contents/${id}/0-converted.png`)
+                .write(`./video-maker/contents/${id}/youtube-thumbnail.jpg`, error => {
                     if (error) {
                         return reject(error);
                     }
@@ -248,13 +248,13 @@ async function robot() {
 
     async function defineTimeOfEachSlide() {
         for (let sentenceIndex = 0; sentenceIndex < content.maximumSentences; sentenceIndex++) {
-            await mp3Duration(`./content/output[${sentenceIndex}].mp3`, function (err, duration) {
+            await mp3Duration(`./video-maker/contents/${id}/output[${sentenceIndex}].mp3`, function (err, duration) {
                 if (err) return console.log(err.message);
                 tempo = duration;
                 //console.log(`File output[${sentenceIndex}] - ${duration} secounds`);
             });
             await images.push({
-                path: `./content/${sentenceIndex}-finished.png`,
+                path: `./video-maker/contents/${id}/${sentenceIndex}-finished.png`,
                 //caption: content.sentences[sentenceIndex].text,
                 loop: tempo
             });
@@ -303,8 +303,8 @@ async function robot() {
             console.log("> [video-robot] Starting render");
 
             videoshow(images, videoOptions)
-                .audio("./content/output[final].mp3")
-                .save("video.mp4")
+                .audio(`./video-maker/contents/${id}/output[final].mp3`)
+                .save(`./video-maker/contents/${id}/video.mp4`)
                 .on("start", function (command) {
                     console.log("> [video-robot] ffmpeg process started:", command);
                     i++;

@@ -1,4 +1,11 @@
 const videoMaker = require("../video-maker/index");
+const mysql = require("mysql");
+var db = mysql.createConnection({
+    "host": "mysql.lightcode.dev",
+    "user": "lightcode",
+    "password": "fc251199",
+    "database": "lightcode"
+})
 
 class Video {
     constructor(req, res, searchTerm, lang, voice, qtdSentences, prefix){
@@ -17,7 +24,19 @@ class Video {
     createNewVideo(){
         let vm = new videoMaker(this.req, this.res);
         vm.create(vm);
-        
+    }
+
+    getVideosFrom(userId) {
+        db.query(`
+            SELECT 
+                url
+            FROM user_content_video
+            WHERE idAccount = '${userId}';
+        `).on('error', (err) => {
+            this.res.send(err);
+        }).on('result', (result) => {
+            this.res.send(result);
+        })
     }
 }
 

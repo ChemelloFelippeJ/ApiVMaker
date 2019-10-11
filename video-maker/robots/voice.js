@@ -3,6 +3,7 @@ const textToSpeech = require('@google-cloud/text-to-speech');
 const fs = require('fs');
 const download = require('download-file')
 const audioconcat = require('audioconcat')
+const ffmpeg = require('fluent-ffmpeg');
 
 const state = require('./state.js');
 
@@ -44,7 +45,7 @@ async function robot(id) {
         if (text.length < sentenceLenght) {
             await freeGoogleTTS(text, sentenceIndex);
         } else {
-            // await paidGoogleTTS(text, sentenceIndex);
+            await paidGoogleTTS(text, sentenceIndex);
         }
 
     }
@@ -65,21 +66,26 @@ async function robot(id) {
     await voicesConcat();
 
     async function voicesConcat() {
-        return new Promise((resolve, reject) => {
-            audioconcat(voices)
-                .concat(`./video-maker/contents/${id}/output[final].mp3`)
-                .on('start', function (command) {
-                    console.log('> [voice-robot] Voices concat started, command: ', command)
-                })
-                .on('error', function (err, stdout, stderr) {
-                    console.error('Error:', err)
-                    console.error('ffmpeg stderr:', stderr)
-                })
-                .on('end', function (output) {
-                    console.log(`> [voice-robot] Audio created in: ./video-maker/contents/${id}/output[final].mp3`, output)
-                    resolve();
-                })
-        });
+        // ffmpeg()
+        //     .input(`./video-maker/contents/${id}/output[0].mp3`)
+        //     .input(`./video-maker/contents/${id}/output[1].mp3`)
+        //     .input(`./video-maker/contents/${id}/output[2].mp3`)
+        //     .input(`./video-maker/contents/${id}/output[3].mp3`)
+        //     .input(`./video-maker/contents/${id}/output[4].mp3`)
+        //     .input(`./video-maker/contents/${id}/output[5].mp3`)
+        //     .input(`./video-maker/contents/${id}/output[6].mp3`)
+        //     .mergeToFile(`./video-maker/contents/${id}/output[final].mp3`)
+        //     .on('end', function() {
+        //         console.log('Screenshots taken');
+        //       })
+
+        voices
+            .reduce((prev, curr) => prev.input(curr), ffmpeg())
+            .on("error", err => console.log(`> [voice-robot] ERROR: ${err.message}`))
+            .on("end", () => {
+                console.log(`> [voice-robot] Final audio transcript merged`);
+            })
+            .mergeToFile(`./video-maker/contents/${id}/output[final].mp3`);
     }
 
 

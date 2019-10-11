@@ -1,6 +1,5 @@
 const robots = {
     input: require('./robots/input.js'),
-    trends: require('./robots/trends'),
     text: require('./robots/text.js'),
     state: require('./robots/state.js'),
     image: require('./robots/image.js'),
@@ -10,8 +9,8 @@ const robots = {
 };
 const fs = require("fs");
 
-// await robots.voice();
-// await robots.video();
+
+
 // await robots.youtube()
 
 class VMaker {
@@ -26,12 +25,13 @@ class VMaker {
 
     async create(obj) {
         this.time = new Date();
-        // await robots.input(this.res, this.language, this.voice, this.searchTerm, this.prefix, this.qtdSentences, this.time, obj);
-        // await this.sleep(500);
-        // await robots.text(this.id);
-        // await robots.image(this.id);
-        this.id = 76;
+        await robots.input(this.res, this.language, this.voice, this.searchTerm, this.prefix, this.qtdSentences, this.time, obj);
+        await this.sleep(500);
+        await robots.text(this.id);
+        await robots.image(this.id);
         await robots.voice(this.id);
+        await robots.video(this.id);
+        await robots.youtube(this.id);
     }
 
     getLastDirName() {

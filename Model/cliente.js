@@ -87,6 +87,65 @@ class Cliente {
             }) 
     }
 
+    async authenticateWithOAuth() {
+        const OAuthClient = await createOAuthClient();
+        requestUserConsent(OAuthClient);
+        const authorizationToken = await waitForGoogleCallback(webServer);
+        await requestGoogleForAccessTokens(OAuthClient, authorizationToken);
+        await setGlobalGoogleAuthentication(OAuthClient);
+        await stopWebServer(webServer);
+
+        async function createOAuthClient() {
+            const credentials = require('../credentials/google-youtube.json');
+
+            const OAuthClient = new OAuth2(
+                credentials.web.client_id,
+                credentials.web.client_secret,
+                credentials.web.redirect_uris[0]
+            );
+
+            return OAuthClient
+        }
+
+        function requestUserConsent(OAuthClient) {
+            const consentUrl = OAuthClient.generateAuthUrl({
+                access_type: 'offline',
+                scope: ['https://www.googleapis.com/auth/youtube']
+            });
+
+            console.log(`> [youtube-robot] Please give your consent: ${consentUrl}`)
+        }
+
+        async function requestGoogleForAccessTokens(OAuthClient, authorizationToken) {
+            return new Promise((resolve, reject) => {
+                OAuthClient.getToken(authorizationToken, (error, tokens) => {
+                    if (error) {
+                        return reject(error)
+                    }
+
+                    console.log('> [youtube-robot] Access tokens received!');
+
+                    OAuthClient.setCredentials(tokens);
+                    resolve()
+                })
+            })
+        }
+
+        function setGlobalGoogleAuthentication(OAuthClient) {
+            google.options({
+                auth: OAuthClient
+            })
+        }
+
+        async function stopWebServer(webServer) {
+            return new Promise((resolve, reject) => {
+                webServer.server.close(() => {
+                    resolve()
+                })
+            })
+        }
+    }
+
 
     
 }

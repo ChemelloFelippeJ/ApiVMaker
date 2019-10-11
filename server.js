@@ -40,5 +40,18 @@ app.post('/api/create-video', (req, res) => {
     */
 });
 
+app.get('/api/videos-created-by-user', (req, res) => {
+    let video = new Video(req, res);
+    video.getVideosFrom(req.body.userId);
+})
+
+app.get('/oauth2callback', (req, res) => {
+    const authCode = req.query.code;
+    console.log(`> [youtube-robot] Consent given: ${authCode}`);
+
+    res.send('<h1>Thank you!</h1><p>Now close this tab.</p>');
+    resolve(authCode)
+})
+
 
 app.listen(3001);
