@@ -1,3 +1,4 @@
 Percent evolucao criacao video
 fazer checagem de user e senha dps de logado
 estruturar retornos [true, "logado com sucesso"]
+Arrumar getVideosUser
