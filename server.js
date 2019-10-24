@@ -24,6 +24,7 @@ app.post('/api/login', (req, res) => {
         req.body.email,
         req.body.password
     );
+    res.send("AAA")
 });
 
 app.post('/api/create-video', (req, res) => {
@@ -55,3 +56,5 @@ app.get('/oauth2callback', (req, res) => {
 
 
 app.listen(3001);
+
+//ab -c 1 -n 5 -v 2 http://localhost:3001/api/videos-created-by-user
